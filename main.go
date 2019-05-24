@@ -1,57 +1,67 @@
 package bank
 
 import (
-	"bufio"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
-	"os"
+	"strings"
 )
 
 //User is a struct that defines what a fields a User has
 type User struct {
-	Name     []string
+	Name     string
 	Email    string
 	Password string
 	Pin      int
 	Balance  int
-	Commands []Command
 }
 
-//Command is struct containing actions a user can take
-type Command struct {
-	checkBalance string
-	deposit      string
-	withdraw     string
+func (u *User) start() {
+	fmt.Println(" Please login or register by typing login or register")
+	strTok := ""
+
+	switch strings.ToUpper(strTok) {
+	case "register":
+		u.register(u.Email, u.Password, u.Pin)
+	case "login":
+		u.login(u.Email, u.Password, u.Pin)
+	}
 }
 
-func main() {
-	fmt.Println(" Please login or register")
-
+func (u *User) register(email string, password string, pin int) *User {
+	fmt.Println("please enter an email and a password")
+	u = &User{
+		Email:    email,
+		Password: password,
+	}
+	u.Save(email, password)
+	return u
 }
 
-func (u *User) register(email string, password string, pin int) {
-
-	scanner := bufio.NewScanner(os.Stdin)
-	fmt.Println(scanner)
-
-}
-
-func (u *User) transact(command string) (int int) {
+func (u *User) userCommands(command string) (int int) {
 	balance := u.Balance
 
 	return balance
 }
 
 func (u *User) login(email string, password string, pin int) {
-	scanner := bufio.NewScanner(os.Stdin)
 
-	fmt.Println(scanner)
+	if u.Password != password {
+		fmt.Println("incorrect password")
+	}
+	if u.Email != email {
+		fmt.Println("incorrect username")
+	} else {
+		if u.Email == email && u.Password == password {
+			fmt.Println("Login successful")
+			//	u.Load()
+		}
+	}
 }
 
 //Save saves a user's account information
-func (u *User) Save(user string) {
+func (u *User) Save(user string, password string) {
 	u.Email = user
 	data, err := json.Marshal(u)
 	if err != nil {
