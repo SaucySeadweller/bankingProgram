@@ -13,30 +13,26 @@ type User struct {
 	Name     string
 	Email    string
 	Password string
-	Pin      int
 	Balance  float64
 }
 
-func (u *User) start() {
+func (u *User) commands() {
 	fmt.Println(" Please login or register by typing login or register")
 	strTok := ""
 
 	switch strings.ToUpper(strTok) {
 	case "register":
-		u.register(u.Email, u.Password, u.Pin)
+		register(u.Email, u.Password)
 	case "login":
-		u.login(u.Email, u.Password, u.Pin)
+		u.login(u.Email, u.Password)
 	}
 }
 
-func (u *User) register(email string, password string, pin int) *User {
+func register(email string, password string) map[string]*User {
 	fmt.Println("please enter an email and a password")
-	u = &User{
-		Email:    email,
-		Password: password,
-	}
-	u.Save(email, password)
-	return u
+	fmt.Scanf("%v", "%v")
+	users := make(map[string]*User)
+	return users
 }
 
 func (u *User) accountBalance() float64 {
@@ -52,7 +48,7 @@ func (u *User) accountWithdral(amount float64) float64 {
 	u.Balance += amount
 	return u.Balance
 }
-func (u *User) login(email string, password string, pin int) {
+func (u *User) login(email string, password string) {
 
 	if u.Password != password {
 		fmt.Println("incorrect password")
