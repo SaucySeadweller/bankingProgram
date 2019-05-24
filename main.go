@@ -14,7 +14,7 @@ type User struct {
 	Email    string
 	Password string
 	Pin      int
-	Balance  int
+	Balance  float64
 }
 
 func (u *User) start() {
@@ -39,12 +39,19 @@ func (u *User) register(email string, password string, pin int) *User {
 	return u
 }
 
-func (u *User) userCommands(command string) (int int) {
-	balance := u.Balance
+func (u *User) accountBalance() float64 {
 
-	return balance
+	return u.Balance
 }
 
+func (u *User) accountDeposit(amount float64) float64 {
+	u.Balance -= amount
+	return u.Balance
+}
+func (u *User) accountWithdral(amount float64) float64 {
+	u.Balance += amount
+	return u.Balance
+}
 func (u *User) login(email string, password string, pin int) {
 
 	if u.Password != password {
