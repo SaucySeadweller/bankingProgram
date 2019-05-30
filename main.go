@@ -4,19 +4,24 @@ import (
 	"fmt"
 	"log"
 	"strings"
-	"time"
 
 	"github.com/SaucySeadweller/bankingProgram/bank"
 )
 
 func main() {
-	var timeStamp time.Time
-	var amount float64
+
 	fmt.Println("Please login or register by typing login or register")
 	cmd := GetString()
+	executeCmd(cmd)
+}
+
+func executeCmd(cmd string) {
+
 	switch strings.ToLower(cmd) {
 	default:
+
 		log.Println("command not found", cmd)
+
 	case "register":
 		u := bank.Register(GetEmailPass())
 		log.Println(u)
@@ -24,28 +29,30 @@ func main() {
 	case "login":
 		u, err := bank.Login(GetEmailPass())
 		if err != nil {
-			log.Fatalln(err)
+			log.Fatal(err)
+
 		}
 		fmt.Println("Welcome: ", u.Name)
-		fmt.Println("What do you want to do?")
+		fmt.Println("What do would you like to do?")
 		cmd := GetString()
 		switch strings.ToLower(cmd) {
 		default:
 			log.Println("command not found", cmd)
 		case "log":
-			u.TransactionLog()
+			fmt.Println(u.ViewTransactions())
 		case "balance":
 			fmt.Println(u.Balance)
 		case "deposit":
-
-			u.Deposit(amount)
+			fmt.Println("enter an amount to deposit")
+			u.Deposit(GetFloat())
 			fmt.Println(u.Balance)
 		case "withdrawl":
-			u.Withdrawl(amount)
+			fmt.Println("enter an amount to withdrawl")
+			u.Withdrawl(GetFloat())
 			fmt.Println(u.Balance)
-		case "history":
-			u.NewTransaction(amount, timeStamp)
+
 		}
+		u.Save()
 	}
 }
 
@@ -69,4 +76,13 @@ func GetString() string {
 		panic(err)
 	}
 	return cmd
+}
+
+func GetFloat() float64 {
+	amount := 0.00
+	_, err := fmt.Scanf("%f", &amount)
+	if err != nil {
+		panic(err)
+	}
+	return amount
 }
