@@ -26,6 +26,7 @@ func executeCmd(cmd string) {
 		u := bank.Register(GetEmailPass())
 		log.Println(u)
 		u.Save()
+
 	case "login":
 		u, err := bank.Login(GetEmailPass())
 		if err != nil {
@@ -33,26 +34,29 @@ func executeCmd(cmd string) {
 
 		}
 		fmt.Println("Welcome: ", u.Name)
-		fmt.Println("What do would you like to do?")
-		cmd := GetString()
-		switch strings.ToLower(cmd) {
-		default:
-			log.Println("command not found", cmd)
-		case "log":
-			fmt.Println(u.ViewTransactions())
-		case "balance":
-			fmt.Println(u.Balance)
-		case "deposit":
-			fmt.Println("enter an amount to deposit")
-			u.Deposit(GetFloat())
-			fmt.Println(u.Balance)
-		case "withdrawl":
-			fmt.Println("enter an amount to withdrawl")
-			u.Withdrawl(GetFloat())
-			fmt.Println(u.Balance)
+		for {
+			fmt.Println("What do would you like to do?")
+			cmd := GetString()
 
+			switch strings.ToLower(cmd) {
+			default:
+				log.Println("command not found", cmd)
+			case "log":
+				fmt.Println(u.ViewTransactions())
+			case "balance":
+				fmt.Println(u.Balance)
+
+			case "deposit":
+				fmt.Println("enter an amount to deposit")
+				u.Deposit(GetFloat())
+				fmt.Println(u.Balance)
+			case "withdrawl":
+				fmt.Println("enter an amount to withdrawl")
+				u.Withdrawl(GetFloat())
+				fmt.Println(u.Balance)
+			}
+			u.Save()
 		}
-		u.Save()
 	}
 }
 
@@ -78,6 +82,7 @@ func GetString() string {
 	return cmd
 }
 
+//GetFloat gets the transactiion amount
 func GetFloat() float64 {
 	amount := 0.00
 	_, err := fmt.Scanf("%f", &amount)
